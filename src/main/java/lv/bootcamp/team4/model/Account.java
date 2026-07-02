@@ -26,7 +26,7 @@ public class Account {
     private String userId;
 
     /**
-     * The public-facing account number (e.g., an IBAN or a custom routing number)
+     * The public-facing account number (e.g., an IBAN)
      * used for transactions and display purposes.
      */
     private String accountNumber;
