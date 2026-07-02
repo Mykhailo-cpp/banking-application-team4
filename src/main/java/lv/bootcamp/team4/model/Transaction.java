@@ -22,8 +22,16 @@ public class Transaction {
      */
     private Account account;
 
+    /**
+     * The category of the operation (DEPOSIT, WITHDRAWAL, or TRANSFER).
+     * This determines how the transaction affects the account balance.
+     */
     private TransactionType type;
 
+    /**
+     * The value of the transaction.
+     * Represented as a BigDecimal to guarantee exact precision and avoid floating-point rounding errors.
+     */
     private BigDecimal amount;
 
     /**

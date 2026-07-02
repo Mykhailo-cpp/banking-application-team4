@@ -12,7 +12,7 @@ import lombok.Builder;
 @Builder
 public class User {
     /**
-     * The unique internal identifier for the user (e.g., a UUID or database primary key).
+     * The unique internal identifier for the user (e.g., a UUID).
      */
     private String id;
 

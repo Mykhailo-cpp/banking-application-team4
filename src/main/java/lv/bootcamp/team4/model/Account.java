@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class Account {
+    /**
+     * The ID of the account.
+     */
     private String id;
 
     /**
