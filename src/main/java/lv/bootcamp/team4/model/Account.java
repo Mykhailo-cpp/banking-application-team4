@@ -14,25 +14,22 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class Account {
-    /**
-     * The unique internal identifier for this account record (e.g., a UUID).
-     */
     private String id;
 
     /**
-     * The unique identifier of the User who owns this account.
-     * This acts as a foreign key reference to the User model.
+     * The IBAN for this account.
      */
-    private String userId;
+    private String iban;
 
     /**
-     * The public-facing account number (e.g., an IBAN)
-     * used for transactions and display purposes.
+     * The full name of the account owner, ready for display purposes.
      */
-    private String accountNumber;
+    private String ownerName;
 
     /**
-     * The current available funds in this account.
+     * The current balance.
+     * Using BigDecimal ensures financial precision
+     * and prevents floating-point rounding errors.
      */
     private BigDecimal balance;
 }

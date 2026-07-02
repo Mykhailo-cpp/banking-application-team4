@@ -15,36 +15,24 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class Transaction {
-    /**
-     * The unique internal identifier for this specific transaction record.
-     */
     private String id;
 
     /**
-     * The identifier of the account from which funds are being deducted.
-     * Note: This may be null or empty for a standard DEPOSIT operation.
+     * Direct reference to the Account object.
      */
-    private String sourceAccountId;
+    private Account account;
 
-    /**
-     * The identifier of the account receiving the funds.
-     * Note: This may be null or empty for a standard WITHDRAWAL operation.
-     */
-    private String destinationAccountId;
+    private TransactionType type;
 
-    /**
-     * The amount of money involved in the transaction.
-     */
     private BigDecimal amount;
 
     /**
-     * The categorization of this operation (DEPOSIT, WITHDRAWAL, or TRANSFER).
+     * The date and time when the transaction was executed.
      */
-    private TransactionType type;
+    private LocalDateTime createdAt;
 
     /**
-     * The date and time when the transaction was executed and recorded
-     * in the system.
+     * The description or reason for the transaction.
      */
-    private LocalDateTime timestamp;
+    private String note;
 }

@@ -22,9 +22,9 @@ public class User {
     private String username;
 
     /**
-     * The email address associated with the user.
+     * Contains the hashed password.
      */
-    private String email;
+    private String passwordHash;
 
     /**
      * The authorization level associated with the user.
