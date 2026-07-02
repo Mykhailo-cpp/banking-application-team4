@@ -3,6 +3,7 @@ package lv.bootcamp.team4.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 /**
@@ -19,7 +20,7 @@ public class Account {
     /**
      * The ID of the account.
      */
-    private String id;
+    private UUID id;
 
     /**
      * The IBAN for this account.

@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 /**
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class Transaction {
-    private String id;
+    private UUID id;
 
     /**
      * Direct reference to the Account object.
