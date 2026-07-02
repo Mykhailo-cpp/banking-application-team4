@@ -1,14 +1,16 @@
 package lv.bootcamp.team4.model;
 
-import lombok.Data;
-import lombok.Builder;
+import lombok.*;
 
 /**
  * Represents a user entity within the application.
  * This class holds the core identity and authorization information
  * for users with the system.
  */
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class User {
     /**

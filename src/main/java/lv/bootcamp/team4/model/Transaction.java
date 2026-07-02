@@ -1,7 +1,6 @@
 package lv.bootcamp.team4.model;
 
-import lombok.Data;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
@@ -12,7 +11,10 @@ import java.math.BigDecimal;
  * This class tracks the movement of funds
  * between accounts and other operations.
  */
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Transaction {
     private String id;

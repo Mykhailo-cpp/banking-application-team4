@@ -1,7 +1,6 @@
 package lv.bootcamp.team4.model;
 
-import lombok.Data;
-import lombok.Builder;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -11,7 +10,10 @@ import java.math.BigDecimal;
  * This class serves as the core data model for user accounts, tracking
  * ownership and current balances.
  */
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Account {
     /**
