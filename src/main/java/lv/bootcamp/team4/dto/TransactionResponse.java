@@ -19,6 +19,9 @@ public class TransactionResponse {
     // the transaction id
     private UUID id;
 
+    // the account this transaction belongs to
+    private UUID accountId;
+
     // what kind of transaction it is (deposit, withdrawal or transfer)
     private TransactionType type;
 
