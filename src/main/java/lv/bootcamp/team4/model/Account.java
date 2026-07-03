@@ -5,37 +5,14 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-
-/**
- * Represents a bank account entity within the system.
- * This class serves as the core data model for user accounts, tracking
- * ownership and current balances.
- */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Account {
-    /**
-     * The ID of the account.
-     */
     private UUID id;
-
-    /**
-     * The IBAN for this account.
-     */
     private String iban;
-
-    /**
-     * The full name of the account owner, ready for display purposes.
-     */
     private String ownerName;
-
-    /**
-     * The current balance.
-     * Using BigDecimal ensures financial precision
-     * and prevents floating-point rounding errors.
-     */
     private BigDecimal balance;
 }

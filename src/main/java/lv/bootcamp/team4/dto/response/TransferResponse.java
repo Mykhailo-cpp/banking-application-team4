@@ -1,4 +1,4 @@
-package lv.bootcamp.team4.model;
+package lv.bootcamp.team4.dto.response;
 
 import lombok.*;
 
@@ -6,16 +6,16 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Transaction {
-    private UUID id;
-    private Account account;
-    private TransactionType type;
+public class TransferResponse {
+    private UUID fromAccountId;
+    private UUID toAccountId;
     private BigDecimal amount;
-    private LocalDateTime createdAt;
     private String note;
+    private LocalDateTime createdAt;
 }
