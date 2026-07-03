@@ -15,7 +15,7 @@ Spring Web, Spring Validation, Lombok, Java 21. In-memory storage, JSON only, no
 ```
 mvn spring-boot:run
 ```
-Starts on http://localhost:8080
+Starts on http://localhost:3400 or https://team4.acnbootcamp.lv/
 
 ## Structure
 - `controller` — HTTP layer
