@@ -1,16 +1,17 @@
 package lv.bootcamp.team4.service;
-
 import lv.bootcamp.team4.model.Account;
 import lv.bootcamp.team4.model.Transaction;
 import lv.bootcamp.team4.model.TransactionType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class TransferService {
+@Transactional
+public class TransferService  {
 
     private final AccountService accountService;
 
