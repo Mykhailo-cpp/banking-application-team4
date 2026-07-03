@@ -21,6 +21,9 @@ public class CreateAccountRequest {
     @NotBlank(message = "Owner name is required")
     private String ownerName;
 
+    //iban number of owner
+    private String iban;
+
     // money the account starts with, can't be negative
     @NotNull(message = "Initial balance is required")
     @PositiveOrZero(message = "Initial balance cannot be negative")
