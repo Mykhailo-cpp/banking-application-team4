@@ -1,0 +1,106 @@
+name: Deploy to Self-Hosted Runner
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      server_port:
+        description: 'Application port'
+        required: false
+        default: '3100'
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    env:
+      APP_CONTAINER_NAME: team4-app
+      APP_IMAGE_NAME: team4-app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: '3.9.6'
+
+      - name: Extract deployment information
+        id: deployment-info
+        run: |
+          COMMIT=$(git rev-parse --short HEAD)
+          PORT_INPUT="${{ github.event.inputs.server_port }}"
+          if [ -z "$PORT_INPUT" ]; then PORT_INPUT="3400"; fi
+          echo "commit=$COMMIT" >> $GITHUB_OUTPUT
+          echo "server_port=$PORT_INPUT" >> $GITHUB_OUTPUT
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Resolve build artifact
+        id: build-artifact
+        run: |
+          JAR_FILE=$(find target -maxdepth 1 -type f -name '*.jar' ! -name 'original-*.jar' | head -n 1)
+          if [ -z "$JAR_FILE" ]; then echo "No jar found"; ls -la target; exit 1; fi
+          echo "jar_file=$JAR_FILE" >> $GITHUB_OUTPUT
+
+      - name: Check Docker availability
+        run: docker version
+
+      - name: Build application image
+        env:
+          JAR_FILE: ${{ steps.build-artifact.outputs.jar_file }}
+          APP_IMAGE_TAG: ${{ env.APP_IMAGE_NAME }}:${{ steps.deployment-info.outputs.commit }}
+        run: |
+          docker build --build-arg JAR_FILE=$JAR_FILE -t $APP_IMAGE_TAG -t $APP_IMAGE_NAME:latest .
+
+      - name: Stop existing application (if running)
+        continue-on-error: true
+        run: docker rm -f $APP_CONTAINER_NAME || true
+
+      - name: Start application container
+        env:
+          SERVER_PORT: ${{ steps.deployment-info.outputs.server_port }}
+          APP_IMAGE_TAG: ${{ env.APP_IMAGE_NAME }}:${{ steps.deployment-info.outputs.commit }}
+        run: |
+          docker run -d \
+            --name $APP_CONTAINER_NAME \
+            --restart unless-stopped \
+            -p $SERVER_PORT:$SERVER_PORT \
+            -e SERVER_PORT=$SERVER_PORT \
+            $APP_IMAGE_TAG
+          sleep 5
+          docker ps --filter "name=$APP_CONTAINER_NAME"
+
+      - name: Verify deployment
+        env:
+          SERVER_PORT: ${{ steps.deployment-info.outputs.server_port }}
+        run: |
+          for i in {1..30}; do
+            if ! docker ps --format '{{.Names}}' | grep -qx "$APP_CONTAINER_NAME"; then
+              echo "Container not running"; docker logs $APP_CONTAINER_NAME || true; exit 1
+            fi
+            if docker logs $APP_CONTAINER_NAME 2>&1 | grep -q "Started Team4Application in"; then
+              echo "Started successfully"; exit 0
+            fi
+            echo "Attempt $i: waiting..."; sleep 2
+          done
+          docker logs $APP_CONTAINER_NAME || true; exit 1
+
+      - name: Display application logs
+        if: always()
+        run: docker logs --tail 50 $APP_CONTAINER_NAME || true
