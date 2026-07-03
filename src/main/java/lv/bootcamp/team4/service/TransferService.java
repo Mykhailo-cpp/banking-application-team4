@@ -4,15 +4,13 @@ import lv.bootcamp.team4.model.Account;
 import lv.bootcamp.team4.model.Transaction;
 import lv.bootcamp.team4.model.TransactionType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-@Transactional
-public class TransferService  {
+public class TransferService {
 
     private final AccountService accountService;
 
@@ -32,21 +30,21 @@ public class TransferService  {
         // Create transaction records
         LocalDateTime now = LocalDateTime.now();
 
-        accountService.recordTransaction(new Transaction(
-                fromAccountId, fromAccount,
-                TransactionType.TRANSFER,
-                amount,
-                now,
-                note != null ? note : "Transfer to account " + toAccountId
-        ));
+        accountService.recordTransaction(Transaction.builder()
+                .account(fromAccount)
+                .type(TransactionType.TRANSFER)
+                .amount(amount)
+                .createdAt(now)
+                .note(note != null ? note : "Transfer to account " + toAccountId)
+                .build());
 
-        accountService.recordTransaction(new Transaction(
-                toAccountId,toAccount,
-                TransactionType.DEPOSIT,
-                amount,
-                now,
-                note != null ? note : "Transfer from account " + fromAccountId
-        ));
+        accountService.recordTransaction(Transaction.builder()
+                .account(toAccount)
+                .type(TransactionType.DEPOSIT)
+                .amount(amount)
+                .createdAt(now)
+                .note(note != null ? note : "Transfer from account " + fromAccountId)
+                .build());
     }
 
     public void credit(UUID accountId, BigDecimal amount, String note) {
@@ -56,14 +54,13 @@ public class TransferService  {
         accountService.adjustBalance(accountId, amount);
 
         // Record transaction
-        accountService.recordTransaction(new Transaction(
-                accountId,
-                account,
-                TransactionType.DEPOSIT,
-                amount,
-                LocalDateTime.now(),
-                note != null ? note : "Deposit"
-        ));
+        accountService.recordTransaction(Transaction.builder()
+                .account(account)
+                .type(TransactionType.DEPOSIT)
+                .amount(amount)
+                .createdAt(LocalDateTime.now())
+                .note(note != null ? note : "Deposit")
+                .build());
     }
 
     public void debit(UUID accountId, BigDecimal amount, String note) {
@@ -73,17 +70,13 @@ public class TransferService  {
         accountService.adjustBalance(accountId, amount.negate());
 
         // Record transaction
-        accountService.recordTransaction(new Transaction(
-                accountId,account,
-                TransactionType.WITHDRAWAL,
-                amount,
-                LocalDateTime.now(),
-                note != null ? note : "Withdrawal"
-        ));
+        accountService.recordTransaction(Transaction.builder()
+                .account(account)
+                .type(TransactionType.WITHDRAWAL)
+                .amount(amount)
+                .createdAt(LocalDateTime.now())
+                .note(note != null ? note : "Withdrawal")
+                .build());
     }
 
-    public BigDecimal checkBalance(UUID  accountId) {
-        Account account = accountService.findAccount(accountId);
-        return account.getBalance();
-    }
 }
